@@ -1,5 +1,5 @@
 {
-  "name": "@dexma/ui-components",
+  "name": "@luisval11/ui-components",
   "version": "5.12.2",
   "description": "DEXMA UI Components (React)",
   "main": "dist/main.bundle.js",
@@ -50,7 +50,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dexma/ui-components.git"
+    "url": "https://github.com/luisval11/ui-components.git"
   },
   "keywords": [
     "ui",
@@ -58,12 +58,12 @@
     "utils",
     "react"
   ],
-  "author": "Matias Menker",
+  "author": "Luis Valero",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dexma/ui-components/issues"
+    "url": "https://github.com/luisval11/ui-components.git"
   },
-  "homepage": "https://github.com/dexma/ui-components#readme",
+  "homepage": "https://github.com/luisval11/ui-components#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
