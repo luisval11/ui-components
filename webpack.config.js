@@ -59,7 +59,7 @@ module.exports = function(env, argv) {
     output: {
       path: path.join(__dirname, 'dist'),
       filename: '[name].bundle.js',
-      library: '@dexma/ui-components',
+      library: 'ui-components',
       libraryTarget: 'umd',
     },
     optimization: {
