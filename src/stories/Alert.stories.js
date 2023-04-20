@@ -11,7 +11,7 @@ export default {
   component: Alert,
 };
 
-export const alert2 = () => (
+export const alert3 = () => (
   <Grid fluid>
     <Row>
       <Cell xs={12}>
