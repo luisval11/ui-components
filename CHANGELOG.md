@@ -1,3 +1,15 @@
+# [5.13.0](https://github.com/luisval11/ui-components/compare/v5.12.2...v5.13.0) (2023-04-20)
+
+
+### Bug Fixes
+
+* **github:** reset version package.json to following next original ver ([8e7f7a0](https://github.com/luisval11/ui-components/commit/8e7f7a02a049167a6101bab9a0c0f938a40b1acf))
+
+
+### Features
+
+* **github:** test github actions for semantic release ([ad2420d](https://github.com/luisval11/ui-components/commit/ad2420dc182dacc55cd3c2c5c51a5a174f1afcb0))
+
 ## [5.12.2](https://github.com/dexma/ui-components/compare/v5.12.1...v5.12.2) (2023-02-15)
 
 
