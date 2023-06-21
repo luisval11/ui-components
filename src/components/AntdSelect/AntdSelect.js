@@ -10,7 +10,6 @@ import {
   StyledAntdSelectDropdown,
   StyledSpanOption,
   StyledSpanOptionSelected,
-  StyledTagSelectedOption,
 } from '../../styles/components/StyledAntdSelect';
 import {
   filterOption,
@@ -24,7 +23,7 @@ import ButtonPaginationSelector from './ButtonPaginationSelector';
 const ALL_CHARACTER = '*';
 const ENTER_CHARACTER = 'Enter';
 
-export const tagRenderButtonPagination = (props, options) => {
+export const tagRenderButtonPagination = (props, options, theme) => {
   const { label, value, closable, onClose } = props;
   const onPreventMouseDown = event => {
     event.preventDefault();
@@ -32,16 +31,26 @@ export const tagRenderButtonPagination = (props, options) => {
   };
 
   return (
-    <StyledTagSelectedOption
+    <StyledSpanOptionSelected
+      className="tag-select-option-selected"
       color={options.filter(element => element.value === value)[0].color}
       onMouseDown={onPreventMouseDown}
-      closable={closable}
       onClose={onClose}
-      style={{ marginRight: 4, padding: '0px 4px' }}
+      style={{ marginRight: 4 }}
       data-testid={`tag-option-selected-${value}`}
+      theme={theme}
     >
       {label}
-    </StyledTagSelectedOption>
+      {closable && (
+        <Icon
+          className="icon-close"
+          name="close"
+          size="small"
+          onClick={onClose}
+          fillColor={theme.color.white}
+        />
+      )}
+    </StyledSpanOptionSelected>
   );
 };
 
@@ -135,6 +144,7 @@ export const optionsRenderer = (
           : '#FFFFFF';
         return (
           <Select.Option
+            className="option-select"
             key={option.value}
             disabled={
               selectedValues.length >= pageSize &&
@@ -175,9 +185,11 @@ const AntdSelect = props => {
     theme,
     isLoading,
     onChange,
+    handleButtonSelectAll,
+    handleClearAll,
   } = props;
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedValues, setSelectedValues] = useState(defaultValues);
+  const [selectedValues, setSelectedValues] = useState([]);
   const antdSelectProps = omit(props, [
     'dataId',
     'defaultValues',
@@ -197,6 +209,10 @@ const AntdSelect = props => {
     setCurrentPage(1);
   }, [searchValue]);
 
+  useEffect(() => {
+    setSelectedValues(defaultValues);
+  }, [defaultValues]);
+
   const handleChangePage = useCallback(page => {
     setCurrentPage(page);
   }, []);
@@ -211,22 +227,24 @@ const AntdSelect = props => {
     const allValues = slicedOptions.map(option => option.value);
 
     setSelectedValues(() => allValues);
+    handleButtonSelectAll && handleButtonSelectAll(allValues);
   };
 
   const closeDropdown = () => {
     setCurrentPage(1);
     sValue.current = '';
     setSearchValue('');
-    if (ref !== null) ref.current.blur();
+    if (ref !== null && ref.current !== null) ref.current.blur();
     setShowDropdown(false);
   };
 
   const reset = () => {
+    handleClearAll && handleClearAll();
     setCurrentPage(1);
     sValue.current = '';
     setSearchValue('');
     setSelectedValues([]);
-    if (ref !== null) ref.current.blur();
+    if (ref !== null && ref.current !== null) ref.current.blur();
     setShowDropdown(false);
   };
 
@@ -237,7 +255,7 @@ const AntdSelect = props => {
           autoClearSearchValue
           clearIcon={<Icon color="gray" name="close" size="small" />}
           data-testid={`${dataId}`}
-          defaultValue={selectedValues}
+          defaultValues={defaultValues}
           optionFilterProp="children"
           filterOption={singleOptionFilter}
           loading={isLoading}
@@ -249,7 +267,28 @@ const AntdSelect = props => {
           style={{ width: '100%' }}
           suffixIcon={
             showDropdown ? (
-              <Icon color="gray" name="chevron_up" size="small" />
+              <>
+                {(searchValue !== '' || selectedValues.length > 0) && (
+                  <Icon
+                    color="gray"
+                    name="close"
+                    size="small"
+                    onClick={e => {
+                      reset();
+                      e.stopPropagation();
+                    }}
+                  />
+                )}
+                <Icon
+                  color="gray"
+                  name="chevron_up"
+                  size="small"
+                  onClick={e => {
+                    closeDropdown();
+                    e.stopPropagation();
+                  }}
+                />
+              </>
             ) : (
               <Icon color="gray" name="chevron_down" size="small" />
             )
@@ -277,7 +316,7 @@ const AntdSelect = props => {
             autoClearSearchValue={false}
             clearIcon={<Icon color="gray" name="close" size="small" />}
             data-testid={`${dataId}`}
-            defaultValue={selectedValues}
+            defaultValues={defaultValues}
             dropdownRender={menu =>
               dropdownRenderSelectAntd(
                 menu,
@@ -346,7 +385,9 @@ const AntdSelect = props => {
             ref={r => {
               ref.current = r;
             }}
-            tagRender={props => tagRenderButtonPagination(props, options)}
+            tagRender={props =>
+              tagRenderButtonPagination(props, options, theme)
+            }
             value={selectedValues}
             dropdownAlign={{ offset: [0, 3] }}
             onChange={values => {
@@ -407,6 +448,8 @@ const propTypes = {
   mode: PropTypes.oneOf(['single', 'multiple', 'tags']),
   options: PropTypes.arrayOf(PropTypes.shape({})),
   onChange: PropTypes.func,
+  handleButtonSelectAll: PropTypes.func,
+  handleClearAll: PropTypes.func,
   pageSize: PropTypes.number,
   placeholder: PropTypes.string,
   theme: PropTypes.shape({}),
