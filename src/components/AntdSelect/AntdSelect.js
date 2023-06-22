@@ -250,6 +250,7 @@ const AntdSelect = props => {
 
   return (
     <>
+      <SelectOptionStyle theme={theme} />
       {mode === 'single' ? (
         <Select
           autoClearSearchValue
@@ -261,6 +262,9 @@ const AntdSelect = props => {
           loading={isLoading}
           placeholder={placeholder} // Unneed, viene de antdSelectProps
           open={showDropdown}
+          ref={r => {
+            ref.current = r;
+          }}
           searchValue={sValue.current}
           showArrow
           showSearch
@@ -296,7 +300,7 @@ const AntdSelect = props => {
           onChange={values => {
             onChange !== undefined && onChange(values);
             setSelectedValues(values);
-            setShowDropdown(false);
+            closeDropdown();
           }}
           onFocus={() => {
             setShowDropdown(true);
@@ -310,119 +314,114 @@ const AntdSelect = props => {
           {...antdSelectProps}
         />
       ) : (
-        <>
-          <SelectOptionStyle theme={theme} />
-          <Select
-            autoClearSearchValue={false}
-            clearIcon={<Icon color="gray" name="close" size="small" />}
-            data-testid={`${dataId}`}
-            defaultValues={defaultValues}
-            dropdownRender={menu =>
-              dropdownRenderSelectAntd(
-                menu,
-                pageSize,
-                currentPage,
-                options,
-                handleChangePage,
-                handleSelectAll,
-                text,
-                searchValue,
-                showDropdown,
-                mode,
-                theme
-              )
-            }
-            optionFilterProp="children"
-            filterOption={filterOption}
-            maxTagCount="responsive"
-            maxTagPlaceholder={values => `+${values.length}`}
-            menuItemSelectedIcon={
-              <Icon color="white" name="close" size="small" />
-            }
-            mode={mode}
-            placeholder={placeholder}
-            searchValue={sValue.current}
-            style={{ width: '100%' }}
-            showArrow
-            showSearch
-            suffixIcon={
-              showDropdown ? (
-                <>
-                  {(searchValue !== '' || selectedValues.length > 0) && (
-                    <Icon
-                      color="gray"
-                      name="close"
-                      size="small"
-                      onClick={e => {
-                        reset();
-                        e.stopPropagation();
-                      }}
-                    />
-                  )}
+        <Select
+          autoClearSearchValue={false}
+          clearIcon={<Icon color="gray" name="close" size="small" />}
+          data-testid={`${dataId}`}
+          defaultValues={defaultValues}
+          dropdownRender={menu =>
+            dropdownRenderSelectAntd(
+              menu,
+              pageSize,
+              currentPage,
+              options,
+              handleChangePage,
+              handleSelectAll,
+              text,
+              searchValue,
+              showDropdown,
+              mode,
+              theme
+            )
+          }
+          optionFilterProp="children"
+          filterOption={filterOption}
+          maxTagCount="responsive"
+          maxTagPlaceholder={values => `+${values.length}`}
+          menuItemSelectedIcon={
+            <Icon color="white" name="close" size="small" />
+          }
+          mode={mode}
+          placeholder={placeholder}
+          searchValue={sValue.current}
+          style={{ width: '100%' }}
+          showArrow
+          showSearch
+          suffixIcon={
+            showDropdown ? (
+              <>
+                {(searchValue !== '' || selectedValues.length > 0) && (
                   <Icon
                     color="gray"
-                    name="chevron_up"
+                    name="close"
                     size="small"
                     onClick={e => {
-                      closeDropdown();
+                      reset();
                       e.stopPropagation();
                     }}
                   />
-                </>
-              ) : (
+                )}
                 <Icon
                   color="gray"
-                  name="chevron_down"
+                  name="chevron_up"
                   size="small"
                   onClick={e => {
-                    setShowDropdown(true);
+                    closeDropdown();
                     e.stopPropagation();
                   }}
                 />
-              )
+              </>
+            ) : (
+              <Icon
+                color="gray"
+                name="chevron_down"
+                size="small"
+                onClick={e => {
+                  setShowDropdown(true);
+                  e.stopPropagation();
+                }}
+              />
+            )
+          }
+          open={showDropdown}
+          ref={r => {
+            ref.current = r;
+          }}
+          tagRender={props => tagRenderButtonPagination(props, options, theme)}
+          value={selectedValues}
+          dropdownAlign={{ offset: [0, 3] }}
+          onChange={values => {
+            onChange !== undefined && onChange(values);
+            setSelectedValues(values);
+          }}
+          onFocus={() => {
+            setShowDropdown(true);
+          }}
+          onSearch={searchText => {
+            setSearchValue(searchText);
+            sValue.current = searchText;
+            return searchText;
+          }}
+          onInputKeyDown={e => {
+            if (
+              ['multiple', 'tags'].includes(mode) &&
+              e.key === ENTER_CHARACTER &&
+              sValue.current.includes(ALL_CHARACTER)
+            ) {
+              handleSelectAll(currentPage, options);
+              e.stopPropagation();
             }
-            open={showDropdown}
-            ref={r => {
-              ref.current = r;
-            }}
-            tagRender={props =>
-              tagRenderButtonPagination(props, options, theme)
-            }
-            value={selectedValues}
-            dropdownAlign={{ offset: [0, 3] }}
-            onChange={values => {
-              onChange !== undefined && onChange(values);
-              setSelectedValues(values);
-            }}
-            onFocus={() => {
-              setShowDropdown(true);
-            }}
-            onSearch={searchText => {
-              setSearchValue(searchText);
-              sValue.current = searchText;
-              return searchText;
-            }}
-            onInputKeyDown={e => {
-              if (
-                ['multiple', 'tags'].includes(mode) &&
-                e.key === ENTER_CHARACTER &&
-                sValue.current.includes(ALL_CHARACTER)
-              ) {
-                handleSelectAll(currentPage, options);
-                e.stopPropagation();
-              }
-            }}
-            {...antdSelectProps}
-          >
-            {optionsRenderer(
-              options,
-              selectedValues,
-              searchValue,
-              pageSize,
-              theme
-            )}
-          </Select>
-        </>
+          }}
+          {...antdSelectProps}
+        >
+          {optionsRenderer(
+            options,
+            selectedValues,
+            searchValue,
+            pageSize,
+            theme
+          )}
+        </Select>
       )}
       {showDropdown && (
         <div
