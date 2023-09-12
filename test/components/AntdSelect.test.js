@@ -422,6 +422,31 @@ describe('AntdSelect', () => {
       const select = screen.getByTestId('select');
       expect(select).toBeTruthy();
     });
+
+    test('should render AntdSelect successfully with ids', () => {
+      const { container } = render(
+        <AntdSelect
+          mode="multiple"
+          style={{ width: '100%' }}
+          options={[
+            { id: 'blueId', color: 'blue', value: 'Test', label: 'Test' },
+          ]}
+        />
+      );
+
+      // When
+      const select = container.querySelector(
+        "[data-testid='select'] > .ant-select-selector"
+      );
+      expect(select).not.toBeNull();
+
+      act(() => {
+        fireEvent.focus(select);
+      });
+
+      expect(screen.getByTestId('select-option-Test').id).toEqual('blueId');
+    });
+
     test('should open dropDown when input is clicked', () => {
       const { container } = render(
         <AntdSelect
@@ -442,6 +467,35 @@ describe('AntdSelect', () => {
       // Then
       expect(screen.findAllByText('Test').length > 0);
     });
+
+    test('should show icon clearAll when a value is selected and allowClear is enabled', () => {
+      const { container } = render(
+        <AntdSelect
+          allowClear
+          defaultValues={['Test']}
+          mode="multiple"
+          style={{ width: '100%' }}
+          options={[
+            { color: 'blue', value: 'Test', label: 'Test' },
+            { color: 'red', value: 'Test1', label: 'Test1' },
+          ]}
+        />
+      );
+      // When
+      const select = container.querySelector(
+        "[data-testid='select'] > .ant-select-selector"
+      );
+      expect(select).not.toBeNull();
+
+      act(() => {
+        fireEvent.focus(select);
+      });
+      // Then
+      expect(screen.findAllByText('Test').length > 0);
+      // One icon for arrow down, another for clearAll and another for selected value
+      expect(screen.getAllByTestId('icon').length).toBe(3);
+    });
+
     test('should trigger onChange when some option is selected', () => {
       const onChange = jest.fn();
       const { container } = render(

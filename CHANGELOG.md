@@ -1,3 +1,31 @@
+# [6.4.0](https://github.com/dexma/ui-components/compare/v6.3.0...v6.4.0) (2023-09-11)
+
+
+### Features
+
+* **cascader:** add Cascader component ([204ff47](https://github.com/dexma/ui-components/commit/204ff4756b0ffd80a75d6f1c319bc2e801ae2ae3))
+
+# [6.3.0](https://github.com/dexma/ui-components/compare/v6.2.0...v6.3.0) (2023-09-08)
+
+
+### Features
+
+* **select:** add id to option of select ([d1c45ef](https://github.com/dexma/ui-components/commit/d1c45ef9d144122c0e425c27badcae0f881f3cc2))
+
+# [6.2.0](https://github.com/dexma/ui-components/compare/v6.1.5...v6.2.0) (2023-09-06)
+
+
+### Features
+
+* **popover:** enable popover component ([43dcbbb](https://github.com/dexma/ui-components/commit/43dcbbb6f40cd25a81def96bcfe40199e02c5996))
+
+## [6.1.5](https://github.com/dexma/ui-components/compare/v6.1.4...v6.1.5) (2023-09-05)
+
+
+### Bug Fixes
+
+* **select:** enable allowClear prop to affect custom iconClear ([582a435](https://github.com/dexma/ui-components/commit/582a435d656441fab966dddfcba809ac071f0464))
+
 ## [6.1.4](https://github.com/dexma/ui-components/compare/v6.1.3...v6.1.4) (2023-08-21)
 
 
